@@ -7,7 +7,7 @@ server = Flask(__name__)
 
 @server.route('/')
 def webhook():
-    return 'ok' if request.args else 'empty'
+    return request.args
 
 
 if __name__ == '__main__':
