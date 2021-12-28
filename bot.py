@@ -4,10 +4,18 @@ from flask import Flask, request
 
 server = Flask(__name__)
 
+logs = []
+
 
 @server.route('/')
 def webhook():
+    logs.append(f"{request.args}")
     return request.args
+
+
+@server.route('/logs')
+def logs():
+    return "\n".join(logs)
 
 
 if __name__ == '__main__':
