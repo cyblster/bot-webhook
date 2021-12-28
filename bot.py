@@ -15,7 +15,7 @@ def webhook():
 
 @server.route('/logs')
 def logs():
-    return "\n".join(logs)
+    return "\n".join(logs) if logs else None
 
 
 if __name__ == '__main__':
