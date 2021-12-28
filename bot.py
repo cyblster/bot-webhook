@@ -9,8 +9,8 @@ arr = []
 
 @server.route('/')
 def webhook():
-    arr.append(", ".join([f"{key}={value}" for key, value in request.args]))
-    return ", ".join([f"{key}={value}" for key, value in request.args])
+    arr.append(", ".join([f"{key}={value}" for key, value in request.args.items()]))
+    return ", ".join([f"{key}={value}" for key, value in request.args.items()])
 
 
 @server.route('/logs')
