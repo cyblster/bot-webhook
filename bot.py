@@ -9,13 +9,13 @@ logs = []
 
 @server.route('/')
 def webhook():
-    logs.append(f"{request.args}")
+    logs.append(request.args)
     return request.args
 
 
 @server.route('/logs')
 def logs():
-    return "\n".join(logs) if logs else None
+    return "\n".join([", ".join(f"{key}={value}" for key, value in [log.items() for log in logs])]) if logs else ""
 
 
 if __name__ == '__main__':
