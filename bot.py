@@ -10,6 +10,7 @@ arr = []
 @server.route('/')
 def webhook():
     arr.append(", ".join([f"{key}={value}" for key, value in request.args.items()]))
+    print(arr[-1])
     return ", ".join([f"{key}={value}" for key, value in request.args.items()])
 
 
