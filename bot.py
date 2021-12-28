@@ -9,13 +9,13 @@ arr = []
 
 @server.route('/')
 def webhook():
-    arr.append(f"{request.args}")
-    return f"{request.args}"
+    arr.append(", ".join([f"{key}={value}" for key, value in request.args]))
+    return ", ".join([f"{key}={value}" for key, value in request.args])
 
 
 @server.route('/logs')
 def logs():
-    return arr if arr else ""
+    return "\n".join(arr) if arr else ""
 
 
 if __name__ == '__main__':
