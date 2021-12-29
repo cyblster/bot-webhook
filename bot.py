@@ -17,9 +17,9 @@ logger.setLevel(logging.DEBUG)
 email_regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
 payment_rates = {
-    "cryptospace — тариф base": -1001535102287,
-    "cryptospace — тариф base x3": -1001683600557,
-    "cryptospace — тариф vip": -1001552473134
+    "cryptospace — тариф base": -1001611757287,
+    "cryptospace — тариф base x3": -1001667337121,
+    "cryptospace — тариф vip": -1001661589284
 }
 
 
@@ -146,6 +146,29 @@ def remove():
     )
     with connection:
         with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT * FROM `users` WHERE `email` = '{email}'"
+            )
+            fetch = cursor.fetchone()
+
+            email, payment_rate, telegram_id = fetch
+            if telegram_id:
+                channel_id = payment_rates.get(payment_rate.lower())
+                if channel_id is None:
+                    return
+
+                bot.kick_chat_member(
+                    chat_id=channel_id,
+                    user_id=telegram_id,
+                    revoke_messages=True
+                )
+
+                text = "Ваш период оплаты закончился"
+                bot.send_message(
+                    chat_id=telegram_id,
+                    text=text
+                )
+
             cursor.execute(
                 f"DELETE FROM `users` WHERE `email` = '{email}'"
             )
