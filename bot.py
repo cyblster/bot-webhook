@@ -73,7 +73,6 @@ def message_email(message):
                 cursor.execute(
                     f"UPDATE `users` SET `telegram_id` = '{telegram_id}' WHERE `email` = '{email}'"
                 )
-                connection.commit()
 
                 channel_id = payment_rates.get(payment_rate.lower())
                 if channel_id is None:
@@ -90,6 +89,8 @@ def message_email(message):
                     chat_id=message.chat.id,
                     text=text
                 )
+
+                connection.commit()
 
 
 @server.route(f"/{os.environ.get('webhook_token')}", methods=["POST"])
