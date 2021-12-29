@@ -1,6 +1,5 @@
 import os
 
-import flask
 import pymysql
 import telebot
 import logging
