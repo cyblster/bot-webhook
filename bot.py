@@ -52,6 +52,12 @@ def message_email(message):
             fetch = cursor.fetchone()
 
             if fetch is None:
+                text = "Почта не найдена."
+                bot.send_message(
+                    chat_id=message.chat.id,
+                    text=text
+                )
+
                 return
 
             email, payment_rate, telegram_id = fetch
