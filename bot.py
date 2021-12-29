@@ -6,6 +6,7 @@ import telebot
 import logging
 
 from flask import Flask, request
+from datetime import datetime, timedelta
 
 
 server = Flask(__name__)
@@ -42,12 +43,11 @@ def message_email(message):
     with connection:
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT `telegram_id` FROM `users` WHERE `email` = '{email}'"
+                f"SELECT * FROM `users` WHERE `email` = '{email}'"
             )
-            if cursor.fetchone():
-                print("Yes")
-            else:
-                print("No!")
+            fetch = cursor.fetchone()
+
+            print(fetch)
 
 
 @server.route(f"/{os.environ.get('webhook_token')}", methods=["POST"])
