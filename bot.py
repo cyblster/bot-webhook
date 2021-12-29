@@ -19,7 +19,7 @@ def add():
         host=os.environ.get("mysql_host"),
         user=os.environ.get("mysql_user"),
         password=os.environ.get("mysql_password"),
-        database=os.environ.get("mysql_data"),
+        database=os.environ.get("mysql_database"),
     )
     with connection:
         with connection.cursor() as cursor:
@@ -40,7 +40,7 @@ def edit():
         host=os.environ.get("mysql_host"),
         user=os.environ.get("mysql_user"),
         password=os.environ.get("mysql_password"),
-        database=os.environ.get("mysql_data"),
+        database=os.environ.get("mysql_database"),
     )
     with connection:
         with connection.cursor() as cursor:
@@ -60,7 +60,7 @@ def remove():
         host=os.environ.get("mysql_host"),
         user=os.environ.get("mysql_user"),
         password=os.environ.get("mysql_password"),
-        database=os.environ.get("mysql_data"),
+        database=os.environ.get("mysql_database"),
     )
     with connection:
         with connection.cursor() as cursor:
