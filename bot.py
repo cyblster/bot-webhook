@@ -20,7 +20,7 @@ def start(message):
     bot.reply_to(message, f"Hello, {username}")
 
 
-@server.route(f"/{os.environ.get('webhook_token')}")
+@server.route(f"/{os.environ.get('webhook_token')}", methods=["POST"])
 def webhook():
     json_string = request.get_data().decode("utf-8")
     update = telebot.types.Update.de_json(json_string)
