@@ -70,7 +70,7 @@ def message_email(message):
                 )
 
             else:
-                channel_id = payment_rates.get(payment_rate)
+                channel_id = payment_rates.get(payment_rate.lower())
                 if channel_id is None:
                     return
 
