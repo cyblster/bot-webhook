@@ -16,13 +16,17 @@ logger.setLevel(logging.DEBUG)
 
 email_regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
+payment_rates = {
+    "cryptospace — тариф base": -1001535102287,
+    "cryptospace — тариф base x3": -1001683600557,
+    "cryptospace — тариф vip": -1001552473134
+}
+
 
 @bot.message_handler(commands=["start"], chat_types=["private"])
 def command_start(message):
-    text = """
-Для получения ссылки на канал с торговыми рекомендациями
-напишите свой e-mail, указанный при регистрации и покупке.
-"""
+    text = "Для получения ссылки на канал с торговыми рекомендациями " + \
+           "напишите свой e-mail, указанный при регистрации и покупке."
 
     bot.send_message(
         chat_id=message.chat.id,
@@ -47,7 +51,31 @@ def message_email(message):
             )
             fetch = cursor.fetchone()
 
-            print(fetch)
+            if fetch is None:
+                return
+
+            email, payment_rate, telegram_id = fetch
+            if telegram_id:
+                text = "Почта уже используется."
+
+                bot.send_message(
+                    chat_id=message.chat.id,
+                    text=text
+                )
+
+            else:
+                channel_id = payment_rates[payment_rate]
+                invite_chat_link = bot.create_chat_invite_link(
+                    chat_id=channel_id,
+                    member_limit=1,
+                    expire_date=datetime.now() + timedelta(days=7)
+                ).invite_link
+
+                text = f"Ваша ссылка на канал: {invite_chat_link}"
+                bot.send_message(
+                    chat_id=message.chat.id,
+                    text=text
+                )
 
 
 @server.route(f"/{os.environ.get('webhook_token')}", methods=["POST"])
