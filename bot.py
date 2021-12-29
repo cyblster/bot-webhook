@@ -11,13 +11,13 @@ server = Flask(__name__)
 bot = telebot.TeleBot(os.environ.get("webhook_token"))
 
 
-@server.route("/")
+@server.route(f"/{os.environ.get('webhook_token')}")
 def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url=f"{os.environ.get('webhook_url')}{os.environ.get('webhook_token')}")
+    json_string = request.get_data().decode("utf-8")
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
 
-    print(request.args)
-    return flask.Response(status=200)
+    return "!", 200
 
 
 @server.route('/add')
@@ -26,7 +26,7 @@ def add():
     payment_rate = request.args.get("payment_rate")
 
     if email is None or payment_rate is None:
-        return flask.Response(status=400)
+        return "!", 400
 
     connection = pymysql.connect(
         host=os.environ.get("mysql_host"),
@@ -47,14 +47,14 @@ def add():
             finally:
                 connection.commit()
 
-    return flask.Response(status=200)
+    return "!", 200
 
 
 @server.route('/remove')
 def remove():
     email = request.args.get("email")
     if email is None:
-        return flask.Response(status=400)
+        return "!", 400
 
     connection = pymysql.connect(
         host=os.environ.get("mysql_host"),
@@ -69,8 +69,10 @@ def remove():
             )
             connection.commit()
 
-    return flask.Response(status=200)
+    return "!", 200
 
 
 if __name__ == '__main__':
+    bot.remove_webhook()
+    bot.set_webhook(url=os.environ.get("webhook_url"))
     server.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
