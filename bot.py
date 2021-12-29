@@ -18,7 +18,7 @@ email_regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
 payment_rates = {
     "cryptospace — тариф base": -1001611757287,
-    "cryptospace — тариф base x3": -100166733712,
+    "cryptospace — тариф base x3": -1001667337121,
     "cryptospace — тариф vip": -1001661589284
 }
 
@@ -125,6 +125,9 @@ def add():
                 cursor.execute(
                     f"UPDATE `users` SET `payment_rate` = '{payment_rate}' WHERE `email` = '{email}'"
                 )
+
+                #bot
+
             finally:
                 connection.commit()
 
