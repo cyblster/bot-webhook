@@ -17,9 +17,9 @@ logger.setLevel(logging.DEBUG)
 email_regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
 payment_rates = {
-    "cryptospace — тариф base": -1001535102287,
-    "cryptospace — тариф base x3": -1001683600557,
-    "cryptospace — тариф vip": -1001552473134
+    "cryptospace — тариф base": -1001611757287,
+    "cryptospace — тариф base x3": -100166733712,
+    "cryptospace — тариф vip": -1001661589284
 }
 
 
@@ -73,6 +73,7 @@ def message_email(message):
                 cursor.execute(
                     f"UPDATE `users` SET `telegram_id` = '{telegram_id}' WHERE `email` = '{email}'"
                 )
+                connection.commit()
 
                 channel_id = payment_rates.get(payment_rate.lower())
                 if channel_id is None:
