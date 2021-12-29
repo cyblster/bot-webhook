@@ -43,7 +43,7 @@ def command_start(message):
 
 @bot.message_handler(regexp=email_regexp, chat_types=["private"])
 def message_email(message):
-    email = message.text
+    email = message.text.lower()
 
     connection = pymysql.connect(
         host=MYSQL_HOST,
@@ -54,7 +54,7 @@ def message_email(message):
     with connection:
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT * FROM `users` WHERE `email` = '{email}'"
+                f"SELECT * FROM `users` WHERE LOWER(`email`) = '{email}'"
             )
             fetch = cursor.fetchone()
 
@@ -98,7 +98,7 @@ def message_email(message):
                 )
 
                 cursor.execute(
-                    f"UPDATE `users` SET `telegram_id` = '{telegram_id}' WHERE `email` = '{email}'"
+                    f"UPDATE `users` SET `telegram_id` = '{telegram_id}' WHERE LOWER(`email`) = '{email}'"
                 )
                 connection.commit()
 
@@ -114,8 +114,8 @@ def webhook():
 
 @server.route('/add', methods=["GET"])
 def add():
-    email = request.args.get("email")
-    payment_rate = request.args.get("payment_rate")
+    email = request.args.get("email").lower()
+    payment_rate = request.args.get("payment_rate").lower()
 
     if email is None or payment_rate is None:
         return "!", 400
@@ -134,7 +134,7 @@ def add():
                 )
             except pymysql.IntegrityError:
                 cursor.execute(
-                    f"UPDATE `users` SET `payment_rate` = '{payment_rate}' WHERE `email` = '{email}'"
+                    f"UPDATE `users` SET `payment_rate` = '{payment_rate}' WHERE LOWER(`email`) = '{email}'"
                 )
             finally:
                 connection.commit()
@@ -157,7 +157,7 @@ def remove():
     with connection:
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT * FROM `users` WHERE `email` = '{email}'"
+                f"SELECT * FROM `users` WHERE LOWER(`email`) = '{email}'"
             )
             fetch = cursor.fetchone()
             if fetch is None:
@@ -186,7 +186,7 @@ def remove():
                 )
 
             cursor.execute(
-                f"DELETE FROM `users` WHERE `email` = '{email}'"
+                f"DELETE FROM `users` WHERE LOWER(`email`) = '{email}'"
             )
             connection.commit()
 
