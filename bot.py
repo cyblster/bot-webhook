@@ -26,7 +26,7 @@ payment_rates = {
 @bot.message_handler(commands=["start"], chat_types=["private"])
 def command_start(message):
     text = "Для получения ссылки на канал с торговыми рекомендациями " + \
-           "напишите свой e-mail, указанный при регистрации и покупке."
+           "напишите адрес электронной почты, указанный при регистрации и покупке."
 
     bot.send_message(
         chat_id=message.chat.id,
@@ -52,7 +52,8 @@ def message_email(message):
             fetch = cursor.fetchone()
 
             if fetch is None:
-                text = "Почта не найдена."
+                text = "Адрес электронной почты не найден." \
+                       "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
                 bot.send_message(
                     chat_id=message.chat.id,
                     text=text
@@ -62,7 +63,8 @@ def message_email(message):
 
             email, payment_rate, telegram_id = fetch
             if telegram_id:
-                text = "Почта уже используется."
+                text = "Адрес электронной почты уже используется. " \
+                       "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
 
                 bot.send_message(
                     chat_id=message.chat.id,
@@ -84,7 +86,7 @@ def message_email(message):
                     expire_date=datetime.now() + timedelta(days=7)
                 ).invite_link
 
-                text = f"Ваша ссылка на канал: {invite_chat_link}"
+                text = f"Ваша ссылка на Telegram-канал: {invite_chat_link}"
                 bot.send_message(
                     chat_id=message.chat.id,
                     text=text
@@ -161,15 +163,15 @@ def remove():
 
                 bot.kick_chat_member(
                     chat_id=channel_id,
-                    user_id=telegram_id,
-                    revoke_messages=True
+                    user_id=telegram_id
                 )
                 bot.unban_chat_member(
                     chat_id=channel_id,
                     user_id=telegram_id
                 )
 
-                text = "Ваш период оплаты закончился"
+                text = "Ваш период оплаты курса закончился. " \
+                       "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
                 bot.send_message(
                     chat_id=telegram_id,
                     text=text
