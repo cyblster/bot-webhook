@@ -18,8 +18,10 @@ email_regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
 @bot.message_handler(commands=["start"], chat_types=["private"])
 def command_start(message):
-    text = """Для получения ссылки на канал с торговыми рекомендациями
-    напишите свой e-mail, указанный при регистрации и покупке."""
+    text = """
+Для получения ссылки на канал с торговыми рекомендациями
+напишите свой e-mail, указанный при регистрации и покупке.
+"""
 
     bot.reply_to(message, text)
 
@@ -38,7 +40,7 @@ def webhook():
     return "!", 200
 
 
-@server.route('/add')
+@server.route('/add', methods=["GET"])
 def add():
     email = request.args.get("email")
     payment_rate = request.args.get("payment_rate")
@@ -68,7 +70,7 @@ def add():
     return "!", 200
 
 
-@server.route('/remove')
+@server.route('/remove', methods=["GET"])
 def remove():
     email = request.args.get("email")
     if email is None:
