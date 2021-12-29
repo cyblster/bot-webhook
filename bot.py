@@ -14,6 +14,12 @@ logger = telebot.logger
 logger.setLevel(logging.DEBUG)
 
 
+@bot.message_handler(commands=["start"])
+def start(message):
+    username = message.from_user.username
+    bot.reply_to(message, f"Hello, {username}")
+
+
 @server.route(f"/{os.environ.get('webhook_token')}")
 def webhook():
     json_string = request.get_data().decode("utf-8")
