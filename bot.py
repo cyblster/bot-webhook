@@ -150,6 +150,8 @@ def remove():
                 f"SELECT * FROM `users` WHERE `email` = '{email}'"
             )
             fetch = cursor.fetchone()
+            if fetch is None:
+                return
 
             email, payment_rate, telegram_id = fetch
             if telegram_id:
@@ -161,6 +163,10 @@ def remove():
                     chat_id=channel_id,
                     user_id=telegram_id,
                     revoke_messages=True
+                )
+                bot.unban_chat_member(
+                    chat_id=channel_id,
+                    user_id=telegram_id
                 )
 
                 text = "Ваш период оплаты закончился"
