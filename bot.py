@@ -1,22 +1,32 @@
 import os
+
+import flask
 import pymysql
+import telebot
 
 from flask import Flask, request
 
 
 server = Flask(__name__)
+bot = telebot.TeleBot(os.environ.get("webhook_token"))
 
-count = 0
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url=f"{os.environ.get('webhook_url')}{os.environ.get('webhook_token')}")
+
+    print(request.args)
+    return flask.Response(status=200)
 
 
 @server.route('/add')
 def add():
-    global count
     email = request.args.get("email")
     payment_rate = request.args.get("payment_rate")
 
     if email is None or payment_rate is None:
-        return ""
+        return flask.Response(status=400)
 
     connection = pymysql.connect(
         host=os.environ.get("mysql_host"),
@@ -36,16 +46,15 @@ def add():
                 )
             finally:
                 connection.commit()
-    count += 1
-    print(count)
-    return ""
+
+    return flask.Response(status=200)
 
 
 @server.route('/remove')
 def remove():
     email = request.args.get("email")
     if email is None:
-        return
+        return flask.Response(status=400)
 
     connection = pymysql.connect(
         host=os.environ.get("mysql_host"),
@@ -60,7 +69,7 @@ def remove():
             )
             connection.commit()
 
-    return ""
+    return flask.Response(status=200)
 
 
 if __name__ == '__main__':
