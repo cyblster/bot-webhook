@@ -74,5 +74,5 @@ def remove():
 
 if __name__ == '__main__':
     bot.remove_webhook()
-    bot.set_webhook(url=os.environ.get("webhook_url"))
+    bot.set_webhook(url=os.environ.get("webhook_url") + os.environ.get("webhook_token"))
     server.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
