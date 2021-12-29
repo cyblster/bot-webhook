@@ -36,7 +36,7 @@ def command_start(message):
            "напишите адрес электронной почты, указанный при Вашей покупке."
 
     bot.send_message(
-        chat_id=message.chat.id,
+        chat_id=message.from_user.id,
         text=text
     )
 
@@ -62,7 +62,7 @@ def message_email(message):
                 text = "Адрес электронной почты не найден. " \
                        "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
                 bot.send_message(
-                    chat_id=message.chat.id,
+                    chat_id=message.from_user.id,
                     text=text
                 )
 
@@ -74,14 +74,12 @@ def message_email(message):
                        "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
 
                 bot.send_message(
-                    chat_id=message.chat.id,
+                    chat_id=message.from_user.id,
                     text=text
                 )
 
             else:
-                cursor.execute(
-                    f"UPDATE `users` SET `telegram_id` = '{message.chat.id}' WHERE `email` = '{email}'"
-                )
+                telegram_id = message.from_user.id
 
                 channel_id = payment_rates.get(payment_rate.lower())
                 if channel_id is None:
@@ -95,10 +93,13 @@ def message_email(message):
 
                 text = f"Ваша ссылка на Telegram-канал: {invite_chat_link}"
                 bot.send_message(
-                    chat_id=message.chat.id,
+                    chat_id=message.from_user.id,
                     text=text
                 )
 
+                cursor.execute(
+                    f"UPDATE `users` SET `telegram_id` = '{telegram_id}' WHERE `email` = '{email}'"
+                )
                 connection.commit()
 
 
