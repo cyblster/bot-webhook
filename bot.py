@@ -70,6 +70,10 @@ def message_email(message):
                 )
 
             else:
+                cursor.execute(
+                    f"UPDATE `users` SET `telegram_id` = '{telegram_id}' WHERE `email` = '{email}'"
+                )
+
                 channel_id = payment_rates.get(payment_rate.lower())
                 if channel_id is None:
                     return
