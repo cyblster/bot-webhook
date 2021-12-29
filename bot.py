@@ -125,9 +125,6 @@ def add():
                 cursor.execute(
                     f"UPDATE `users` SET `payment_rate` = '{payment_rate}' WHERE `email` = '{email}'"
                 )
-
-                #bot
-
             finally:
                 connection.commit()
 
