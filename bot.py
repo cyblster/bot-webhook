@@ -9,6 +9,14 @@ from flask import Flask, request
 from datetime import datetime, timedelta
 
 
+APP_URL = os.environ.get("webhook_url")
+APP_TOKEN = os.environ.get("webhook_token")
+MYSQL_HOST = os.environ.get("mysql_host")
+MYSQL_USER = os.environ.get("mysql_user")
+MYSQL_PASSWORD = os.environ.get("mysql_password")
+MYSQL_DATABASE = os.environ.get("mysql_database")
+
+
 server = Flask(__name__)
 bot = telebot.TeleBot(os.environ.get("webhook_token"))
 logger = telebot.logger
@@ -39,10 +47,10 @@ def message_email(message):
     email = message.text
 
     connection = pymysql.connect(
-        host=os.environ.get("mysql_host"),
-        user=os.environ.get("mysql_user"),
-        password=os.environ.get("mysql_password"),
-        database=os.environ.get("mysql_database"),
+        host=MYSQL_HOST,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        database=MYSQL_DATABASE,
     )
     with connection:
         with connection.cursor() as cursor:
@@ -113,10 +121,10 @@ def add():
         return "!", 400
 
     connection = pymysql.connect(
-        host=os.environ.get("mysql_host"),
-        user=os.environ.get("mysql_user"),
-        password=os.environ.get("mysql_password"),
-        database=os.environ.get("mysql_database"),
+        host=MYSQL_HOST,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        database=MYSQL_DATABASE,
     )
     with connection:
         with connection.cursor() as cursor:
@@ -141,10 +149,10 @@ def remove():
         return "!", 400
 
     connection = pymysql.connect(
-        host=os.environ.get("mysql_host"),
-        user=os.environ.get("mysql_user"),
-        password=os.environ.get("mysql_password"),
-        database=os.environ.get("mysql_database"),
+        host=MYSQL_HOST,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        database=MYSQL_DATABASE,
     )
     with connection:
         with connection.cursor() as cursor:
@@ -187,5 +195,5 @@ def remove():
 
 if __name__ == '__main__':
     bot.remove_webhook()
-    bot.set_webhook(url=os.environ.get("webhook_url") + os.environ.get("webhook_token"))
+    bot.set_webhook(url=APP_URL + APP_TOKEN)
     server.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
