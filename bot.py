@@ -44,7 +44,10 @@ def message_email(message):
             cursor.execute(
                 f"SELECT `telegram_id` FROM `users` WHERE `email` = '{email}'"
             )
-            print(cursor.fetchone())
+            if cursor.fetchone():
+                print("Yes")
+            else:
+                print("No!")
 
 
 @server.route(f"/{os.environ.get('webhook_token')}", methods=["POST"])
