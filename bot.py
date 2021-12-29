@@ -59,7 +59,7 @@ def message_email(message):
             fetch = cursor.fetchone()
 
             if fetch is None:
-                text = "Адрес электронной почты не найден." \
+                text = "Адрес электронной почты не найден. " \
                        "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
                 bot.send_message(
                     chat_id=message.chat.id,
