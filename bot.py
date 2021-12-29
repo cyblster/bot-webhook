@@ -31,7 +31,20 @@ def command_start(message):
 
 @bot.message_handler(regexp=email_regexp, chat_types=["private"])
 def message_email(message):
-    pass
+    email = message.text
+
+    connection = pymysql.connect(
+        host=os.environ.get("mysql_host"),
+        user=os.environ.get("mysql_user"),
+        password=os.environ.get("mysql_password"),
+        database=os.environ.get("mysql_database"),
+    )
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT `telegram_id` FROM `users` WHERE `email` = '{email}'"
+            )
+            print(cursor.fetchone())
 
 
 @server.route(f"/{os.environ.get('webhook_token')}", methods=["POST"])
