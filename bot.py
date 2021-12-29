@@ -6,9 +6,12 @@ from flask import Flask, request
 
 server = Flask(__name__)
 
+count = 0
+
 
 @server.route('/add')
 def add():
+    global count
     email = request.args.get("email")
     payment_rate = request.args.get("payment_rate")
 
@@ -27,13 +30,14 @@ def add():
                 cursor.execute(
                     f"INSERT INTO `users` (`email`, `payment_rate`) VALUES ('{email}', '{payment_rate}')"
                 )
-            except:
+            except pymysql.IntegrityError:
                 cursor.execute(
                     f"UPDATE `users` SET `payment_rate` = '{payment_rate}' WHERE `email` = '{email}'"
                 )
             finally:
                 connection.commit()
-
+    count += 1
+    print(count)
     return ""
 
 
