@@ -13,7 +13,7 @@ def add():
     payment_rate = request.args.get("payment_rate")
 
     if email is None or payment_rate is None:
-        return
+        return ""
 
     connection = pymysql.connect(
         host=os.environ.get("mysql_host"),
@@ -23,31 +23,18 @@ def add():
     )
     with connection:
         with connection.cursor() as cursor:
-            cursor.execute(
-                f"INSERT INTO `users` (`email`, `payment_rate`) VALUES ('{email}', '{payment_rate}')"
-            )
-            connection.commit()
+            try:
+                cursor.execute(
+                    f"INSERT INTO `users` (`email`, `payment_rate`) VALUES ('{email}', '{payment_rate}')"
+                )
+            except:
+                cursor.execute(
+                    f"UPDATE `users` SET `payment_rate` = '{payment_rate}' WHERE `email` = '{email}'"
+                )
+            finally:
+                connection.commit()
 
-
-@server.route('/edit')
-def edit():
-    email = request.args.get("email")
-    payment_rate = request.args.get("payment_rate")
-    if email is None or payment_rate is None:
-        return
-
-    connection = pymysql.connect(
-        host=os.environ.get("mysql_host"),
-        user=os.environ.get("mysql_user"),
-        password=os.environ.get("mysql_password"),
-        database=os.environ.get("mysql_database"),
-    )
-    with connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"UPDATE `users` SET `payment_rate` = '{payment_rate}' WHERE `email` = '{email}'"
-            )
-            connection.commit()
+    return ""
 
 
 @server.route('/remove')
@@ -68,6 +55,8 @@ def remove():
                 f"DELETE FROM `users` WHERE `email` = '{email}'"
             )
             connection.commit()
+
+    return ""
 
 
 if __name__ == '__main__':
