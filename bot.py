@@ -23,7 +23,10 @@ def command_start(message):
 напишите свой e-mail, указанный при регистрации и покупке.
 """
 
-    bot.reply_to(message, text)
+    bot.send_message(
+        chat_id=message.chat.id,
+        text=text
+    )
 
 
 @bot.message_handler(regexp=email_regexp, chat_types=["private"])
