@@ -18,7 +18,7 @@ MYSQL_DATABASE = os.environ.get("mysql_database")
 
 
 server = Flask(__name__)
-bot = telebot.TeleBot(oAPP_TOKEN)
+bot = telebot.TeleBot(APP_TOKEN)
 logger = telebot.logger
 logger.setLevel(logging.DEBUG)
 
