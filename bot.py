@@ -32,8 +32,8 @@ payment_rates = {
 
 @bot.message_handler(commands=["start"], chat_types=["private"])
 def command_start(message):
-    text = "Для получения ссылки на канал с торговыми рекомендациями " + \
-           "напишите адрес электронной почты, указанный при регистрации и покупке."
+    text = "Для получения ссылки на закрытый канал Азама Ходжаева " \
+           "напишите адрес электронной почты, указанный при Вашей покупке."
 
     bot.send_message(
         chat_id=message.chat.id,
