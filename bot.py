@@ -1,22 +1,73 @@
 import os
-import telebot
+import pymysql
+
 from flask import Flask, request
+
 
 server = Flask(__name__)
 
-arr = []
+
+@server.route('/add')
+def add():
+    email = request.args.get("email")
+    payment_rate = request.args.get("payment_rate")
+
+    if email is None or payment_rate is None:
+        return
+
+    connection = pymysql.connect(
+        host=os.environ.get("mysql_host"),
+        user=os.environ.get("mysql_user"),
+        password=os.environ.get("mysql_password"),
+        database=os.environ.get("mysql_data"),
+    )
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"INSERT INTO `users` (`email`, `payment_rate`) VALUES ('{email}', '{payment_rate}')"
+            )
+            connection.commit()
 
 
-@server.route('/')
-def webhook():
-    arr.append(", ".join([f"{key}={value}" for key, value in request.args.items()]))
-    print(arr[-1])
-    return ", ".join([f"{key}={value}" for key, value in request.args.items()])
+@server.route('/edit')
+def edit():
+    email = request.args.get("email")
+    payment_rate = request.args.get("payment_rate")
+    if email is None or payment_rate is None:
+        return
+
+    connection = pymysql.connect(
+        host=os.environ.get("mysql_host"),
+        user=os.environ.get("mysql_user"),
+        password=os.environ.get("mysql_password"),
+        database=os.environ.get("mysql_data"),
+    )
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE `users` SET `payment_rate` = '{payment_rate}' WHERE `email` = '{email}'"
+            )
+            connection.commit()
 
 
-@server.route('/logs')
-def logs():
-    return "<br>".join(arr) if arr else ""
+@server.route('/remove')
+def remove():
+    email = request.args.get("email")
+    if email is None:
+        return
+
+    connection = pymysql.connect(
+        host=os.environ.get("mysql_host"),
+        user=os.environ.get("mysql_user"),
+        password=os.environ.get("mysql_password"),
+        database=os.environ.get("mysql_data"),
+    )
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"DELETE FROM `users` WHERE `email` = '{email}'"
+            )
+            connection.commit()
 
 
 if __name__ == '__main__':
