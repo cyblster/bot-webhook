@@ -70,7 +70,10 @@ def message_email(message):
                 )
 
             else:
-                channel_id = payment_rates[payment_rate]
+                channel_id = payment_rates.get(payment_rate)
+                if channel_id is None:
+                    return
+
                 invite_chat_link = bot.create_chat_invite_link(
                     chat_id=channel_id,
                     member_limit=1,
