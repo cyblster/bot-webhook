@@ -13,11 +13,20 @@ bot = telebot.TeleBot(os.environ.get("webhook_token"))
 logger = telebot.logger
 logger.setLevel(logging.DEBUG)
 
+email_regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
-@bot.message_handler(commands=["start"])
-def start(message):
-    username = message.from_user.username
-    bot.reply_to(message, f"Hello, {username}")
+
+@bot.message_handler(commands=["start"], chat_types=["private"])
+def command_start(message):
+    text = """Для получения ссылки на канал с торговыми рекомендациями
+    напишите свой e-mail, указанный при регистрации и покупке."""
+
+    bot.reply_to(message, text)
+
+
+@bot.message_handler(regexp=email_regexp, chat_types=["private"])
+def message_email(message):
+    pass
 
 
 @server.route(f"/{os.environ.get('webhook_token')}", methods=["POST"])
