@@ -3,12 +3,15 @@ import os
 import flask
 import pymysql
 import telebot
+import logging
 
 from flask import Flask, request
 
 
 server = Flask(__name__)
 bot = telebot.TeleBot(os.environ.get("webhook_token"))
+logger = telebot.logger
+logger.setLevel(logging.DEBUG)
 
 
 @server.route(f"/{os.environ.get('webhook_token')}")
