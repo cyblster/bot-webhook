@@ -219,8 +219,8 @@ def username_by_email():
             cursor.execute(
                 f"SELECT `telegram_username` FROM `users` WHERE LOWER(`email`) = '{email}'"
             )
-            fetch = cursor.fetchone()[0]
-            return fetch, 200 if fetch else "", 400
+            fetch = cursor.fetchone()
+            return fetch[0], 200 if fetch else "", 400
 
 
 if __name__ == '__main__':
