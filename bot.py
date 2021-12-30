@@ -68,7 +68,7 @@ def message_email(message):
 
                 return
 
-            email, payment_rate, telegram_id = fetch
+            email, payment_rate, telegram_id, telegram_username = fetch
             if telegram_id:
                 text = "Адрес электронной почты уже используется. " \
                        "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
