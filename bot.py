@@ -202,6 +202,26 @@ def remove():
     return "!", 200
 
 
+@server.route('/username_by_email', methods=["GET"])
+def username_by_email():
+    email = request.args.get("email")
+    if email is None:
+        return "!", 400
+
+    connection = pymysql.connect(
+        host=MYSQL_HOST,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        database=MYSQL_DATABASE,
+    )
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT `telegram_username` FROM `users` WHERE LOWER(`email`) = '{email}'"
+            )
+            return cursor.fetchone()[0], 200
+
+
 if __name__ == '__main__':
     bot.remove_webhook()
     bot.set_webhook(url=APP_URL + APP_TOKEN)
