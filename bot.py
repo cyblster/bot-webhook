@@ -78,29 +78,38 @@ def message_email(message):
                     text=text
                 )
 
-            else:
-                telegram_id = message.from_user.id
+                return
 
-                channel_id = payment_rates.get(payment_rate.lower())
-                if channel_id is None:
-                    return
+            telegram_id = message.from_user.id
+            telegram_username = message.from_user.username
 
-                invite_chat_link = bot.create_chat_invite_link(
-                    chat_id=channel_id,
-                    member_limit=1,
-                    expire_date=datetime.now() + timedelta(days=7)
-                ).invite_link
+            channel_id = payment_rates.get(payment_rate.lower())
+            if channel_id is None:
+                return
 
-                text = f"Ваша ссылка на Telegram-канал: {invite_chat_link}"
-                bot.send_message(
-                    chat_id=message.from_user.id,
-                    text=text
+            invite_chat_link = bot.create_chat_invite_link(
+                chat_id=channel_id,
+                member_limit=1,
+                expire_date=datetime.now() + timedelta(days=7)
+            ).invite_link
+
+            text = f"Ваша ссылка на Telegram-канал: {invite_chat_link}"
+            bot.send_message(
+                chat_id=message.from_user.id,
+                text=text
+            )
+
+            if telegram_username:
+                cursor.execute(
+                    f"UPDATE `users` SET `telegram_id` = '{telegram_id}', `telegram_username` = '{telegram_username}' "
+                    f"WHERE LOWER(`email`) = '{email}'"
                 )
-
+            else:
                 cursor.execute(
                     f"UPDATE `users` SET `telegram_id` = '{telegram_id}' WHERE LOWER(`email`) = '{email}'"
                 )
-                connection.commit()
+
+            connection.commit()
 
 
 @server.route(f"/{APP_TOKEN}", methods=["POST"])
