@@ -221,6 +221,8 @@ def username_by_email():
             )
             print(cursor.fetchone())
 
+        return "!", 200
+
 
 if __name__ == '__main__':
     bot.remove_webhook()
