@@ -68,7 +68,7 @@ def message_email(message):
 
                 return
 
-            email, payment_rate, telegram_id, telegram_username = fetch
+            email, payment_rate, telegram_id, telegram_username,  = fetch
             if telegram_id:
                 text = "Адрес электронной почты уже используется. " \
                        "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
@@ -172,7 +172,7 @@ def remove():
             if fetch is None:
                 return
 
-            email, payment_rate, telegram_id = fetch[:3]
+            email, payment_rate, telegram_id, telegram_username,  = fetch
             if telegram_id:
                 channel_id = payment_rates.get(payment_rate.lower())
                 if channel_id is None:
