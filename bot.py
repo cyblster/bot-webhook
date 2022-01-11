@@ -172,7 +172,7 @@ def remove():
             if fetch is None:
                 return
 
-            email, payment_rate, telegram_id = fetch
+            email, payment_rate, telegram_id = fetch[:3]
             if telegram_id:
                 channel_id = payment_rates.get(payment_rate.lower())
                 if channel_id is None:
