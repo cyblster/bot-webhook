@@ -157,9 +157,42 @@ def mysql_remove():
 
     payment_id = payment_link.split('/')[:-1]
 
+    cursor = mysql_query(
+        f"SELECT * FROM `users` WHERE `payment_id` = '{payment_id}'"
+    )
+    if not cursor:
+        return
+
+    fetchone = cursor.fetchone()
+    if not fetchone:
+        return
+
+    payment_id, payment_rate, email, telegram_id, telegram_username, telegram_firstname, telegram_lastname = fetchone
+    if telegram_id:
+        channel_id = payment_rates.get(payment_rate)
+        if channel_id is None:
+            return
+
+        bot.kick_chat_member(
+            chat_id=channel_id,
+            user_id=telegram_id
+        )
+        bot.unban_chat_member(
+            chat_id=channel_id,
+            user_id=telegram_id
+        )
+
+        text = "Ваш период оплаты курса закончился. " \
+               "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
+        bot.send_message(
+            chat_id=telegram_id,
+            text=text
+        )
+
     mysql_query(
         f"DELETE FROM `users` WHERE `payment_id` = '{payment_id}'"
     )
+
     return "!", 200
 
 
