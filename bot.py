@@ -49,8 +49,7 @@ def mysql_add():
     if payment_link is None or payment_rate is None or email is None:
         return "!", 400
 
-    payment_id = payment_link.split("/")[:-1]
-    print(payment_id) #
+    payment_id = payment_link.split("/")[-1]
 
     mysql_query(
         f"INSERT INTO `users` (`payment_id`, `payment_rate`, `email`) "
