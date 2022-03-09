@@ -49,6 +49,8 @@ def mysql_add():
     if payment_id is None or payment_rate is None or email is None:
         return "!", 400
 
+    print(payment_id)
+
     mysql_query(
         f"INSERT INTO `users` (`payment_id`, `payment_rate`, `email`) "
         f"VALUES ('{payment_id}', '{payment_rate}', '{email}')"
