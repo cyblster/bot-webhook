@@ -24,9 +24,10 @@ logger.setLevel(logging.DEBUG)
 email_regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
 payment_rates = {
-    "cryptospace — тариф base": -1001611757287,
-    "cryptospace — тариф base x3": -1001667337121,
-    "cryptospace — тариф vip": -1001661589284
+    "Тариф - Base x3": -1001750121173,
+    "Тариф - Base x6": -1001229801856,
+    "Тариф - VIP x6": -1001531945348,
+    "Тариф - Super VIP x12": -1001601848724
 }
 
 
