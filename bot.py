@@ -43,13 +43,13 @@ def mysql_query(query):
 
 @server.route("/add", methods=["GET"])
 def mysql_add():
-    payment_id = request.args.get("payment_id")
+    payment_link = request.args.get("payment_id")
     payment_rate = request.args.get("payment_rate")
     email = request.args.get("email")
-    if payment_id is None or payment_rate is None or email is None:
+    if payment_link is None or payment_rate is None or email is None:
         return "!", 400
 
-    print(payment_id)
+    payment_id = payment_link.split('/')[:-1]
 
     mysql_query(
         f"INSERT INTO `users` (`payment_id`, `payment_rate`, `email`) "
@@ -59,9 +59,11 @@ def mysql_add():
 
 
 def mysql_remove():
-    payment_id = request.args.get("payment_id")
-    if payment_id is None:
+    payment_link = request.args.get("payment_link")
+    if payment_link is None:
         return "!", 400
+
+    payment_id = payment_link.split('/')[:-1]
 
     mysql_query(
         f"DELETE FROM `users` WHERE `payment_id` = '{payment_id}'"
