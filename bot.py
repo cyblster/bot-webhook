@@ -38,7 +38,9 @@ def mysql_query(query):
     )
     with connection:
         with connection.cursor() as cursor:
-            return cursor.execute(query)
+            result = cursor.execute(query)
+
+            return result
 
 
 @bot.message_handler(commands=["start"], chat_types=["private"])
