@@ -38,9 +38,9 @@ def mysql_query(query):
     )
     with connection:
         with connection.cursor() as cursor:
-            result = cursor.execute(query)
+            cursor.execute(query)
 
-            return result
+            return cursor
 
 
 @bot.message_handler(commands=["start"], chat_types=["private"])
@@ -58,7 +58,12 @@ def command_start(message):
 def message_email(message):
     email = message.text.lower()
 
-    fetchall = mysql_query(f"SELECT * FROM `users` WHERE `email` = '{email}' AND `telegram_id` IS NULL").fetchall()
+    cursor = mysql_query(f"SELECT * FROM `users` WHERE `email` = '{email}' AND `telegram_id` IS NULL")
+    if not cursor:
+        return
+
+    fetchall = cursor.fetchall()
+
     if not fetchall:
         text = "Адрес электронной почты не найден или уже используется. " \
                "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
