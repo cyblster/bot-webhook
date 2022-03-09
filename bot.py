@@ -50,7 +50,7 @@ def mysql_add():
         return "!", 400
 
     payment_id = payment_link.split("/")[:-1]
-    print(payment_id)
+    print(payment_id) #
 
     mysql_query(
         f"INSERT INTO `users` (`payment_id`, `payment_rate`, `email`) "
