@@ -43,15 +43,13 @@ def mysql_query(query):
 
 @server.route("/add", methods=["GET"])
 def mysql_add():
-    payment_link = request.args.get("payment_id")
+    payment_link = request.args.get("payment_link")
     payment_rate = request.args.get("payment_rate")
     email = request.args.get("email")
     if payment_link is None or payment_rate is None or email is None:
         return "!", 400
 
     payment_id = payment_link.split("/")[-1]
-
-    print(payment_link, payment_id)
 
     mysql_query(
         f"INSERT INTO `users` (`payment_id`, `payment_rate`, `email`) "
