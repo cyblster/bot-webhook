@@ -38,7 +38,82 @@ def mysql_query(query):
     )
     with connection:
         with connection.cursor() as cursor:
-            cursor.execute(query)
+            return cursor.execute(query)
+
+
+@bot.message_handler(commands=["start"], chat_types=["private"])
+def command_start(message):
+    text = "Для получения ссылки на закрытый канал Азама Ходжаева " \
+           "напишите адрес электронной почты, указанный при Вашей покупке."
+
+    bot.send_message(
+        chat_id=message.from_user.id,
+        text=text
+    )
+
+
+@bot.message_handler(regexp=email_regexp, chat_types=["private"])
+def message_email(message):
+    email = message.text.lower()
+
+    fetchall = mysql_query(f"SELECT * FROM `users` WHERE `email` = '{email}' AND `telegram_id` IS NULL").fetchall()
+    if not fetchall:
+        text = "Адрес электронной почты не найден или уже используется. " \
+               "Если произошла ошибка, пожалуйста, свяжитесь с технической поддержкой @azamkhodzhaev_bot"
+
+        bot.send_message(
+            chat_id=message.from_user.id,
+            text=text
+        )
+
+        return
+
+    for fetch in fetchall:
+        payment_id, payment_rate, email, telegram_id, telegram_username, telegram_firstname, telegram_lastname = fetch
+
+        telegram_id = message.from_user.id
+        telegram_username = message.from_user.username
+        telegram_firstname = message.from_user.first_name
+        telegram_lastname = message.from_user.last_name
+
+        channel_id = payment_rates.get(payment_rate)
+        if not channel_id:
+            return
+
+        invite_chat_link = bot.create_chat_invite_link(
+            chat_id=channel_id,
+            member_limit=1,
+            expire_date=datetime.now() + timedelta(days=7)
+        ).invite_link
+
+        text = f"Ваша ссылка на Telegram-канал ({payment_rate}): {invite_chat_link}"
+        bot.send_message(
+            chat_id=message.from_user.id,
+            text=text
+        )
+
+        mysql_query(
+            f"UPDATE `users` SET `telegram_id` = '{telegram_id}' "
+            f"WHERE `payment_id` = '{payment_id}'"
+        )
+
+        if telegram_username:
+            mysql_query(
+                f"UPDATE `users` SET `telegram_username` = '{telegram_username}' "
+                f"WHERE `payment_id` = '{payment_id}'"
+            )
+
+        if telegram_firstname:
+            mysql_query(
+                f"UPDATE `users` SET `telegram_firstname` = '{telegram_firstname}' "
+                f"WHERE `payment_id` = '{payment_id}'"
+            )
+
+        if telegram_lastname:
+            mysql_query(
+                f"UPDATE `users` SET `telegram_lastname` = '{telegram_lastname}' "
+                f"WHERE `payment_id` = '{payment_id}'"
+            )
 
 
 @server.route("/add", methods=["GET"])
@@ -58,6 +133,7 @@ def mysql_add():
     return "!", 200
 
 
+@server.route("/remove", methods=["GET"])
 def mysql_remove():
     payment_link = request.args.get("payment_link")
     if payment_link is None:
