@@ -155,7 +155,7 @@ def mysql_remove():
     if payment_link is None:
         return "!", 400
 
-    payment_id = payment_link.split('/')[:-1]
+    payment_id = payment_link.split('/')[-1]
 
     cursor = mysql_query(
         f"SELECT * FROM `users` WHERE `payment_id` = '{payment_id}'"
