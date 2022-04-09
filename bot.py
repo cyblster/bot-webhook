@@ -24,6 +24,7 @@ logger.setLevel(logging.DEBUG)
 email_regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
 payment_rates = {
+    "Тариф - Base x1": -1001611757287,
     "Тариф - Base x3": -1001611757287,
     "Тариф - Base x6": -1001667337121,
     "Тариф - VIP x6": -1001661589284,
