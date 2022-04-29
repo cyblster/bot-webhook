@@ -169,6 +169,8 @@ def mysql_remove():
         return
 
     payment_id, payment_rate, email, telegram_id, telegram_username, telegram_firstname, telegram_lastname = fetchone
+
+    telegram_id = int(telegram_id)
     if telegram_id:
         channel_id = payment_rates.get(payment_rate)
         if channel_id is None:
